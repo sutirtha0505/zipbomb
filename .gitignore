@@ -6,3 +6,5 @@ scatter.log
 layer0.zip
 nssm/
 ZipbombSimulator.exe
+VPS/node_modules/
+VPS/incoming/

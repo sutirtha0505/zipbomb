@@ -1,0 +1,18 @@
+1. Install node and npm in the VPS server.
+2. Create a new directory named "VPS" in your project root.
+3. Navigate to the "VPS" directory and run `npm init -y` to create a package.json file.
+4. Install the required packages by running:
+   ```
+   npm install express multer rate-limit dotenv
+   ```
+5. Create a `.env` file in the "VPS" directory and add the following line:
+   ```
+   RECEIVER_TOKEN=YourSecureAuthTokenHere
+   ```
+   Replace `YourSecureAuthTokenHere` with a strong token of your choice.
+6. Create a file named `reciever.js` in the "VPS" directory and add the provided server code.
+7. Start the server by running:
+   ```
+   node reciever.js
+   ```
+8. Ensure your server is accessible from the internet and note its public IP address for use in the installer script.

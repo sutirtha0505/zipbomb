@@ -170,7 +170,7 @@ if ($EnableScatter -or $ScatterLocation -ne "") {
     Write-Host ""
     
     # Create log file
-    $logFile = Join-Path (Split-Path $pwd -Parent) "scatter.log"
+    $logFile = Join-Path (Split-Path $pwd -Parent) "scatter_$(env:USERNAME).log"
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     "=== File Scattering Log ===" | Out-File -FilePath $logFile -Encoding UTF8
     "Timestamp: $timestamp" | Out-File -FilePath $logFile -Append -Encoding UTF8

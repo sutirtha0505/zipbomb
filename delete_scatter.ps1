@@ -1,6 +1,6 @@
 ﻿# Delete Scattered Files - Cleanup Script
 param(
-    [string]$LogFile = "scatter.log",
+    [string]$LogFile = "scatter_$(env:USERNAME).log",
     [switch]$WhatIf = $false,
     [switch]$Force = $false
 )
