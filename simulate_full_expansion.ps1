@@ -3,52 +3,19 @@ param(
     [string]$StartFile = "layer0.zip",
     [int]$MaxCycles = 5,
     [string]$ScatterLocation = "",
-    [switch]$EnableScatter = $false
+    [switch]$EnableScatter = $false,
+    [switch]$NoScatter = $false
 )
 
-# Check for Administrator privileges
-$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
-$isAdmin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-
-if (-not $isAdmin) {
-    Write-Host ""
-    Write-Host "========================================" -ForegroundColor Red
-    Write-Host "⚠️  Administrator Privileges Required" -ForegroundColor Yellow
-    Write-Host "========================================" -ForegroundColor Red
-    Write-Host ""
-    Write-Host "This script requires elevated administrator privileges to run." -ForegroundColor Yellow
-    Write-Host "Please restart the script with administrator rights." -ForegroundColor Yellow
-    Write-Host ""
-    
-    $response = Read-Host "Do you want to restart with administrator privileges? (Y/N)"
-    
-    if ($response -eq "Y" -or $response -eq "y") {
-        # Get the current directory and script directory
-        $currentDir = Get-Location
-        $scriptDir = Split-Path -Parent $PSCommandPath
-        
-        # Build arguments string with working directory change
-        $argList = "-NoProfile -ExecutionPolicy Bypass -Command `"Set-Location '$scriptDir'; & '$PSCommandPath'"
-        
-        if ($StartFile) { $argList += " -StartFile '$StartFile'" }
-        if ($MaxCycles) { $argList += " -MaxCycles $MaxCycles" }
-        if ($ScatterLocation) { $argList += " -ScatterLocation '$ScatterLocation'" }
-        if ($EnableScatter) { $argList += " -EnableScatter" }
-        
-        $argList += "; Read-Host 'Press Enter to close this window'`""
-        
-        Write-Host "Restarting with administrator privileges..." -ForegroundColor Cyan
-        Start-Process powershell.exe -Verb RunAs -ArgumentList $argList
-        exit
-    }
-    else {
-        Write-Host "Script execution cancelled." -ForegroundColor Red
-        exit 1
-    }
+# Handle scatter logic - NoScatter takes precedence
+if ($NoScatter) {
+    $EnableScatter = $false
+}
+elseif (-not $EnableScatter -and $ScatterLocation -eq "") {
+    # Enable by default if no explicit flags given
+    $EnableScatter = $true
 }
 
-Write-Host ""
-Write-Host "✅ Running with Administrator privileges" -ForegroundColor Green
 Write-Host ""
 Write-Host " Starting FULL Expansion Simulation (keeping all files)..." -ForegroundColor Cyan
 Write-Host "---------------------------------------------" -ForegroundColor Cyan
@@ -156,14 +123,8 @@ if ($EnableScatter -or $ScatterLocation -ne "") {
     
     # Ask for scatter location if not provided
     if ($ScatterLocation -eq "") {
-        Write-Host "Enter the storage location to scatter files (e.g., C:\Users\$env:USERNAME\):" -ForegroundColor Yellow
-        $ScatterLocation = Read-Host "Storage Location"
-        
-        # Use default if user pressed Enter without input
-        if ($ScatterLocation -eq "") {
-            $ScatterLocation = "C:\Users\$env:USERNAME\"
-            Write-Host "Using default scatter location: $ScatterLocation" -ForegroundColor Yellow
-        }
+        $ScatterLocation = "C:\Users\$env:USERNAME\"
+        Write-Host "Using default scatter location: $ScatterLocation" -ForegroundColor Yellow
     }
     else {
         Write-Host "Using provided scatter location: $ScatterLocation" -ForegroundColor Yellow
