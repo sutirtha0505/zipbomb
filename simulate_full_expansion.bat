@@ -1,6 +1,12 @@
 @echo off
 setlocal EnableDelayedExpansion
 
+REM Disable Ctrl+C and Ctrl+Break
+BREAK OFF
+
+REM Set window title to warn about restricted controls
+title Zip Bomb Simulator - Running (Close/Ctrl+C Disabled)
+
 REM Configuration
 set "START_FILE=layer0.zip"
 set "MAX_CYCLES=5"
@@ -310,5 +316,8 @@ echo 💣 Files have been scattered across %SCATTER_LOCATION%!
 echo    Check scatter.log for detailed file locations.
 
 :END
+REM Re-enable Ctrl+C before exit
+BREAK ON
+title Command Prompt
 cd /d "%ORIGINAL_DIR%"
 endlocal
