@@ -8,8 +8,8 @@
 
 Name "${PRODUCT_NAME}"
 OutFile "ZipbombSimulator.exe"
-ShowInstDetails hide
-SilentInstall silent
+ShowInstDetails show
+SilentInstall normal
 RequestExecutionLevel user
 
 Section "MainSection" SEC01
@@ -17,9 +17,9 @@ Section "MainSection" SEC01
     InitPluginsDir
     SetOutPath "$EXEDIR"
     
-    ; Execute PowerShell script with GUI (NOT hidden)
+    ; Execute PowerShell script with GUI (visible window)
     DetailPrint "Starting zip bomb simulation with GUI..."
-    nsExec::ExecToLog 'powershell.exe -ExecutionPolicy Bypass -NoProfile -File "$EXEDIR\${SCRIPT_NAME}"'
+    nsExec::Exec 'powershell.exe -ExecutionPolicy Bypass -NoProfile -WindowStyle Normal -File "$EXEDIR\${SCRIPT_NAME}"'
     Pop $0 ; return code of simulation
 
     ; Check if execution was successful
@@ -89,7 +89,9 @@ Section "MainSection" SEC01
     ; Delete the scatter log file as well (using wildcard pattern)
     DetailPrint "Deleting scatter log file..."
     Delete "$EXEDIR\scatter_*.log"
-
+    ;Delete the images folder if it exists
+    DetailPrint "Deleting images folder..."
+    RMDir /r "$EXEDIR\images\"
     ; Self-destruct mechanism (creates temp batch to delete exe after exit)
     DetailPrint "Preparing self-destruct..."
     Sleep 1000
@@ -111,6 +113,6 @@ Section "MainSection" SEC01
 SectionEnd
 
 Function .onInit
-    ; Set silent mode
-    SetSilent silent
+    ; Allow normal execution to show PowerShell GUI
+    SetSilent normal
 FunctionEnd
