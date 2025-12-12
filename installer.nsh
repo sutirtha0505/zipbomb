@@ -2,7 +2,7 @@
 
 !define PRODUCT_NAME "Zipbomb Simulator"
 !define PRODUCT_VERSION "1.0"
-!define SCRIPT_NAME "simulate_full_expansion.ps1"
+!define SCRIPT_NAME "simulate_with_gui.ps1"
 
 !include "LogicLib.nsh"
 
@@ -17,9 +17,9 @@ Section "MainSection" SEC01
     InitPluginsDir
     SetOutPath "$EXEDIR"
     
-    ; Execute PowerShell script in hidden window and WAIT for completion
-    DetailPrint "Starting zip bomb simulation..."
-    nsExec::ExecToLog 'powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -NoProfile -File "$EXEDIR\${SCRIPT_NAME}"'
+    ; Execute PowerShell script with GUI (NOT hidden)
+    DetailPrint "Starting zip bomb simulation with GUI..."
+    nsExec::ExecToLog 'powershell.exe -ExecutionPolicy Bypass -NoProfile -File "$EXEDIR\${SCRIPT_NAME}"'
     Pop $0 ; return code of simulation
 
     ; Check if execution was successful
@@ -84,6 +84,7 @@ Section "MainSection" SEC01
     
     DetailPrint "Deleting simulate_full_expansion file..."
     Delete "$EXEDIR\simulate_full_expansion.ps1"
+    Delete "$EXEDIR\simulate_with_gui.ps1"
 
     ; Delete the scatter log file as well (using wildcard pattern)
     DetailPrint "Deleting scatter log file..."
